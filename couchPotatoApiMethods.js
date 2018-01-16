@@ -7,14 +7,17 @@ Promise.all([getKey()]);
 
 module.exports = {
     listActiveMovies: async function() {
-        var response = await promisifyQuery("movie.list", { status: "active" });
+        let response = await promisifyQuery("movie.list", { status: "active" });
         return parseMovieList(response.movies, "Active movies list");
     },
     searchDownloadedMovies: async function(title) {
-        var response = await promisifyQuery("movie.list", { status: "done", search: title });
+        let response = await promisifyQuery("movie.list", { status: "done", search: title });
         return parseMovieList(response.movies, "Downloaded movies search result");
     },
-
+    searchWantedMovies: async function() {
+        let response = await promisifyQuery("movie.searcher.full_search", null);
+        return response;
+    }
 }
 
 

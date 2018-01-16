@@ -16,7 +16,7 @@ telegram.onText(/\/cpserverstatus/, (msg, match) => {
 
 });
 
-telegram.onText(/\/cpserverstart/, (msg, match) => {
+telegram.onText(/\/\bcpserverstart\b/, (msg, match) => {
     executeCommand.startCP().then(function(response) {
         telegram.sendMessage(msg.chat.id, "Servidor iniciado");
     }).catch(function(error) {
@@ -24,7 +24,7 @@ telegram.onText(/\/cpserverstart/, (msg, match) => {
     });
 });
 
-telegram.onText(/\/cpserverrestart/, (msg, match) => {
+telegram.onText(/\/\bcpserverrestart\b/, (msg, match) => {
     executeCommand.restartCP().then(function(response) {
         telegram.sendMessage(msg.chat.id, "Servidor reiniciado");
     }).catch(function(error) {
@@ -32,7 +32,7 @@ telegram.onText(/\/cpserverrestart/, (msg, match) => {
     });
 });
 
-telegram.onText(/\/cpserverstop/, (msg, match) => {
+telegram.onText(/\/\bcpserverstop\b/, (msg, match) => {
     executeCommand.stopCP().then(function(response) {
         telegram.sendMessage(msg.chat.id, "Servidor parado");
     }).catch(function(error) {
@@ -40,11 +40,11 @@ telegram.onText(/\/cpserverstop/, (msg, match) => {
     });
 });
 
-telegram.onText(/\/listactivemovies/, (msg, match) => {
+telegram.onText(/\/\blistactivemovies\b/, (msg, match) => {
     couchPotato.listActiveMovies().then(function(response) {
         telegram.sendMessage(msg.chat.id, response);
     }).catch(function(error) {
-        telegram.sendMessage(msg.chat.id, error);
+        telegram.sendMessage(msg.chat.id, error.message);
     });
 });
 
@@ -52,11 +52,20 @@ telegram.onText(/\/searchdownloadedmovies (.+)/, (msg, match) => {
     couchPotato.searchDownloadedMovies(match[1]).then(function(response) {
         telegram.sendMessage(msg.chat.id, response);
     }).catch(function(error) {
-        telegram.sendMessage(msg.chat.id, error);
+        telegram.sendMessage(msg.chat.id, error.message);
     });
 });
 
+telegram.onText(/\/\bsearchwantedmovies\b/, (msg, match) => {
+    couchPotato.searchWantedMovies().then(function(response) {
+        telegram.sendMessage(msg.chat.id, "Search of wanted movies started");
+    }).catch(function(error) {
+        telegram.sendMessage(msg.chat.id, error.message);
+    });
+});
+
+
+
 telegram.on("text", (message) => {
     console.log(message.chat.id, message.text, new Date(message.date * 1000).toGMTString());
-    // telegram.sendMessage(message.chat.id, "Hello world");
 });
