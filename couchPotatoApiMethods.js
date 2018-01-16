@@ -1,12 +1,14 @@
-const config = require('./config.json');
+var CouchPotato = require("couchpotato");
+const config = require("./config.json");
 const cp = new CouchPotato(config.couchPotato.url, config.couchPotato.port);
 
 Promise.all([getKey()]);
 
 
 module.exports = {
-    pruebaCouch: async function() {
-        return await promisifyQuery('app.available', null);
+    listActiveMovies: async function() {
+        var response = await promisifyQuery("movie.list", { status: "active" });
+        return parseMovieList(response.movies);
     }
 }
 
@@ -20,7 +22,7 @@ function promisifyQuery(query, options) {
                 return reject("Error en la query");
             }
             console.log("Response body: ", body)
-            resolve(JSON.stringify(body));
+            resolve(body);
         });
     });
 }
@@ -36,4 +38,14 @@ function getKey() {
 
         })
     });
+}
+
+function parseMovieList(movieList) {
+    let prettifiedMovieList = "---Active movies list--- \n";
+    movieList.forEach((movie, index) => {
+        index = index + 1;
+        prettifiedMovieList += "#" + index + " " + movie.info.original_title + " (" + movie.info.year + ") " + "IMDB: " +
+            movie.info.rating.imdb[0] + " " + movie.info.rating.imdb[1] + " votes" + "\n";
+    });
+    return movieList.length === 0 ? prettifiedMovieList + "0" : prettifiedMovieList;
 }

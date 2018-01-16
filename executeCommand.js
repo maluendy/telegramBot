@@ -1,19 +1,19 @@
 //Ejecutar procesos Linux
-const exec = require('child_process').exec;
+const exec = require("child_process").exec;
 
 module.exports = {
     checkCPserviceStatus: async function() {
-        return await promisifyChildProcess('service couchpotato status');
+        return await promisifyChildProcess("service couchpotato status");
     },
 
     startCP: async function() {
-        return await promisifyChildProcess('sudo service couchpotato start');
+        return await promisifyChildProcess("sudo service couchpotato start");
     },
     restartCP: async function() {
-        return await promisifyChildProcess('sudo service couchpotato restart');
+        return await promisifyChildProcess("sudo service couchpotato restart");
     },
     stopCP: async function() {
-        return await promisifyChildProcess('sudo service couchpotato stop');
+        return await promisifyChildProcess("sudo service couchpotato stop");
     }
 }
 
