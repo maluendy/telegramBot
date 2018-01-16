@@ -1,5 +1,9 @@
 {
     "telegram": {
         "apiKey": "insert api key here"
+    },
+    "couchPotato": {
+        "url": "127.0.0.1",
+        "port": 5050
     }
 }

@@ -1,7 +1,5 @@
-// CouchPotato
-
-const CouchPotato = require('couchpotato');
-const cp = new CouchPotato("127.0.0.1", 5050);
+const config = require('./config.json');
+const cp = new CouchPotato(config.couchPotato.url, config.couchPotato.port);
 
 Promise.all([getKey()]);
 
