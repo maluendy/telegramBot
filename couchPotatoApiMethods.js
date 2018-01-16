@@ -8,8 +8,13 @@ Promise.all([getKey()]);
 module.exports = {
     listActiveMovies: async function() {
         var response = await promisifyQuery("movie.list", { status: "active" });
-        return parseMovieList(response.movies);
-    }
+        return parseMovieList(response.movies, "Active movies list");
+    },
+    searchDownloadedMovies: async function(title) {
+        var response = await promisifyQuery("movie.list", { status: "done", search: title });
+        return parseMovieList(response.movies, "Downloaded movies search result");
+    },
+
 }
 
 
@@ -18,10 +23,8 @@ function promisifyQuery(query, options) {
     return new Promise((resolve, reject) => {
         cp.query(query, options, (res, body) => {
             if (!res) {
-                console.log("Query result: ".res);
                 return reject("Error en la query");
             }
-            console.log("Response body: ", body)
             resolve(body);
         });
     });
@@ -40,8 +43,8 @@ function getKey() {
     });
 }
 
-function parseMovieList(movieList) {
-    let prettifiedMovieList = "---Active movies list--- \n";
+function parseMovieList(movieList, title) {
+    let prettifiedMovieList = "--- " + title + " --- \n";
     movieList.forEach((movie, index) => {
         index = index + 1;
         prettifiedMovieList += "#" + index + " " + movie.info.original_title + " (" + movie.info.year + ") " + "IMDB: " +

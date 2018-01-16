@@ -46,7 +46,14 @@ telegram.onText(/\/listactivemovies/, (msg, match) => {
     }).catch(function(error) {
         telegram.sendMessage(msg.chat.id, error);
     });
+});
 
+telegram.onText(/\/searchdownloadedmovies (.+)/, (msg, match) => {
+    couchPotato.searchDownloadedMovies(match[1]).then(function(response) {
+        telegram.sendMessage(msg.chat.id, response);
+    }).catch(function(error) {
+        telegram.sendMessage(msg.chat.id, error);
+    });
 });
 
 telegram.on("text", (message) => {
