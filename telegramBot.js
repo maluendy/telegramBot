@@ -48,7 +48,7 @@ telegram.onText(/\/\blistactivemovies\b/, (msg, match) => {
     });
 });
 
-telegram.onText(/\/searchdownloadedmovies (.+)/, (msg, match) => {
+telegram.onText(/\/\bsearchdownloadedmovies\b (.+)/, (msg, match) => {
     couchPotato.searchDownloadedMovies(match[1]).then(function(response) {
         telegram.sendMessage(msg.chat.id, response);
     }).catch(function(error) {
@@ -64,6 +64,31 @@ telegram.onText(/\/\bsearchwantedmovies\b/, (msg, match) => {
     });
 });
 
+telegram.onText(/\/\bsearchmovie\b (.+)/, (msg, match) => {
+    couchPotato.searchMovie(match[1]).then(function(response) {
+        if (response.length > 0) {
+            telegram.sendMessage(msg.chat.id, "--- Matching movie titles --- \n", {
+                "reply_markup": {
+                    "keyboard": couchPotato.keyboardMovieList(response)
+                }
+            });
+        } else {
+            telegram.sendMessage(msg.chat.id, "No movies found with title: " + match[1]);
+        }
+    }).catch(function(error) {
+        telegram.sendMessage(msg.chat.id, error.message);
+    });
+});
+
+telegram.onText(/\*&-(.+)/, (msg, match) => {
+    let title = match[1].split("->")[0];
+    let imdbId = match[1].split("->")[2];
+    couchPotato.addWantedMovie(title, imdbId).then(function(response) {
+        telegram.sendMessage(msg.chat.id, "Added movie: " + response.movie.info.original_title + " (" + response.movie.info.year + ")");
+    }).catch(function(error) {
+        telegram.sendMessage(msg.chat.id, error.message);
+    });
+});
 
 
 telegram.on("text", (message) => {
