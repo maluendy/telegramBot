@@ -68,8 +68,8 @@ telegram.onText(/\/\bsearchmovie\b (.+)/, (msg, match) => {
     couchPotato.searchMovie(match[1]).then(function(response) {
         if (response.length > 0) {
             telegram.sendMessage(msg.chat.id, "--- Matching movie titles --- \n", {
-                "reply_markup": {
-                    "keyboard": couchPotato.keyboardMovieList(response)
+                reply_markup: {
+                    keyboard: couchPotato.keyboardMovieList(response)
                 }
             });
         } else {
@@ -84,7 +84,12 @@ telegram.onText(/\*&-(.+)/, (msg, match) => {
     let title = match[1].split("->")[0];
     let imdbId = match[1].split("->")[2];
     couchPotato.addWantedMovie(title, imdbId).then(function(response) {
-        telegram.sendMessage(msg.chat.id, "Added movie: " + response.movie.info.original_title + " (" + response.movie.info.year + ")");
+        let text = "Added movie: " + response.movie.info.original_title + " (" + response.movie.info.year + ")";
+        telegram.sendMessage(msg.chat.id, text, {
+            reply_markup: {
+                hide_keyboard: true
+            }
+        });
     }).catch(function(error) {
         telegram.sendMessage(msg.chat.id, error.message);
     });

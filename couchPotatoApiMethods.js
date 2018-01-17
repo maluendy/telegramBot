@@ -2,7 +2,9 @@ var CouchPotato = require("couchpotato");
 const config = require("./config.json");
 const cp = new CouchPotato(config.couchPotato.url, config.couchPotato.port);
 
-Promise.all([getKey()]);
+Promise.all([getKey().then(function(response) { console.log(response) }).catch(function(error) {
+    console.log(error);
+})]);
 
 
 module.exports = {
@@ -54,7 +56,6 @@ function promisifyQuery(query, options) {
 function getKey() {
     return new Promise((resolve, reject) => {
         cp.getKey(function(result) {
-            console.log("Has key:", result);
             if (result) {
                 resolve("Has key - true");
             }
